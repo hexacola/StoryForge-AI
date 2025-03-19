@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StoryForge AI | Interactive Book Generator</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <div class="bg-decoration"></div>
+  
+  <!-- Navigation -->
+  <nav>
+    <div class="nav-container">
+      <a href="#" class="nav-logo"><i class="fas fa-fire-alt"></i> StoryForge AI</a>
+      <div class="nav-links">
+        <a href="#generator" class="nav-link active" data-page="generator">Generator</a>
+        <a href="#library" class="nav-link" data-page="library">My Library</a>
+        <a href="#pricing" class="nav-link" data-page="pricing">Pricing</a>
+        <a href="#about" class="nav-link" data-page="about">About</a>
+      </div>
+      <div class="user-account">
+        <div id="signInDiv" class="google-signin"></div>
+        <div class="user-profile" id="userProfile" style="display: none;">
+          <div class="user-avatar" id="userAvatar"></div>
+          <div class="user-dropdown">
+            <span id="userName">User</span>
+            <i class="fas fa-chevron-down"></i>
+            <div class="dropdown-menu">
+              <a href="#" id="accountSettings"><i class="fas fa-cog"></i> Account Settings</a>
+              <a href="#" id="subscriptionStatus"><i class="fas fa-crown"></i> Subscription</a>
+              <a href="#" id="signOutBtn"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  
+  <header class="fadeInDown">
+    <h1><i class="fas fa-fire-alt"></i> StoryForge AI</h1>
+    <p>Your imagination, our AI magic - create complete books with 20 chapters, artwork, and narration in minutes</p>
+  </header>
+  
+  <main>
+    <!-- Generator Page -->
+    <section id="generator" class="page active">
+      <div class="input-container fadeInUp">
+        <input type="text" id="userPrompt" placeholder="E.g., dystopian cyberpunk, medieval fantasy, space colonization...">
+        <button id="generateBtn"><i class="fas fa-hammer"></i> Forge Story</button>
+      </div>
+      
+      <div class="options-panel">
+        <div class="model-select">
+          <label for="modelSelect">Text Generation Model:</label>
+          <select id="modelSelect">
+            <option value="openai-large">GPT-4o (detailed content)</option>
+            <option value="openai">GPT-4o-mini (shorter content)</option>
+            <option value="mistral">Mistral (creative)</option>
+            <option value="llama">Llama 3.3 70B (detailed)</option>
+            <option value="deepseek">DeepSeek-V3 (storytelling)</option>
+          </select>
+        </div>
+        <div class="voice-select">
+          <label for="voiceSelect">Narrator Voice:</label>
+          <select id="voiceSelect">
+            <option value="nova">Nova (Neutral)</option>
+            <option value="alloy">Alloy (Friendly)</option>
+            <option value="echo">Echo (Deep)</option>
+            <option value="fable">Fable (Storyteller)</option>
+            <option value="onyx">Onyx (Dramatic)</option>
+            <option value="shimmer">Shimmer (Bright)</option>
+          </select>
+        </div>
+        
+        <div class="save-options">
+          <button id="saveBtn" disabled><i class="fas fa-save"></i> Save Book</button>
+          <button id="downloadBtn" disabled><i class="fas fa-download"></i> Download PDF</button>
+        </div>
+      </div>
+      
+      <div id="progressContainer" class="progress-container" style="display: none;">
+        <h3>Forging your masterpiece...</h3>
+        <div class="progress-bar">
+          <div id="progressBar" class="progress"></div>
+        </div>
+        <p id="progressStatus">Initializing...</p>
+      </div>
+      
+      <div id="results" class="fadeIn book-container">
+        <!-- Sidebar with book cover and contents -->
+        <div class="book-sidebar">
+          <div class="book-cover">
+            <div class="book-spine"></div>
+            <div class="book-front">
+              <h2 id="title">--</h2>
+              <img id="cover" src="" alt="Book Cover">
+              <p class="book-author">Created with StoryForge AI</p>
+            </div>
+          </div>
+          
+          <div class="table-of-contents">
+            <h3><i class="fas fa-list"></i> Table of Contents</h3>
+            <div id="tableOfContents"></div>
+          </div>
+        </div>
+        
+        <!-- Main book content area -->
+        <div class="book-content">
+          <div id="content" class="chapters-wrapper">
+            <!-- Chapter content will be loaded here -->
+            <div class="book-intro">
+              <div class="book-placeholder">
+                <i class="fas fa-feather-alt"></i>
+                <p>Start your literary journey...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Audio section -->
+      <div class="audio-container">
+        <h3><i class="fas fa-headphones"></i> Audio Version</h3>
+        <div id="chapterAudios"></div>
+      </div>
+    </section>
+    
+    <!-- Library Page -->
+    <section id="library" class="page">
+      <div class="my-library">
+        <h3><i class="fas fa-bookmark"></i> My Book Library</h3>
+        <div id="savedBooks" class="saved-books">
+          <p class="empty-library">You don't have any saved books yet.</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- About Page -->
+    <section id="about" class="page">
+      <div class="about-content">
+        <h3><i class="fas fa-info-circle"></i> About StoryForge AI</h3>
+        <div class="creator-card">
+          <div class="creator-img">
+            <i class="fas fa-user-circle"></i>
+          </div>
+          <div class="creator-info">
+            <h4>Tauris Gramauskas</h4>
+            <p class="creator-title">21-year-old Multimedia Student & AI Enthusiast</p>
+            <p class="creator-desc">Hey there! I'm Tauris, the slightly sleep-deprived but enthusiastic creator behind StoryForge AI. When I'm not drowning in multimedia assignments or explaining to my grandmother that AI won't steal her recipes, I'm coding tools like this one. I built StoryForge because I believe everyone has a story to tell, even if they can't type faster than 20 WPM like me!</p>
+          </div>
+        </div>
+        
+        <div class="about-funny">
+          <h4><i class="fas fa-laugh-beam"></i> What's This Thing Anyway?</h4>
+          <p>
+            StoryForge AI is like having a caffeinated novelist, a sleep-deprived illustrator, and a voice actor (who probably needs to clear their throat) all crammed into your computer! Just type something like "space pirates with pet octopuses" and BAM! – you'll get a 20-chapter literary masterpiece that would make Shakespeare say "Wait, how'd you do that so fast?"
+          </p>
+          <p>
+            Whether you need a bedtime story that isn't about that same purple dinosaur again, want to impress your literature professor without reading those 37 books on the syllabus, or just want to see what happens when AI tries to write a romance between two sentient toasters – StoryForge has got you covered!
+          </p>
+        </div>
+        
+        <div class="about-grid">
+          <div class="about-feature">
+            <i class="fas fa-laptop-code"></i>
+            <h4>Advanced AI Models</h4>
+            <p>We use the latest AI models - from OpenAI, Mistral, Llama, and others - to best match your needs.</p>
+          </div>
+          
+          <div class="about-feature">
+            <i class="fas fa-images"></i>
+            <h4>Cover Creation</h4>
+            <p>Automatically generate professional, visually appealing book covers based on your described topic.</p>
+          </div>
+          
+          <div class="about-feature">
+            <i class="fas fa-book"></i>
+            <h4>Comprehensive Content</h4>
+            <p>Each book is created with an introduction, 20 detailed chapters, and narrative that includes character development, dialogue, and descriptions.</p>
+          </div>
+          
+          <div class="about-feature">
+            <i class="fas fa-volume-up"></i>
+            <h4>Audio Narration</h4>
+            <p>Listen to your created book with natural, emotional narration, choosing from several voice options.</p>
+          </div>
+          
+          <div class="about-feature">
+            <i class="fas fa-file-pdf"></i>
+            <h4>PDF Export</h4>
+            <p>Download generated books in PDF format to read anywhere, even without internet connection.</p>
+          </div>
+          
+          <div class="about-feature">
+            <i class="fas fa-save"></i>
+            <h4>Library</h4>
+            <p>Save your favorite books in your local browser to return to them anytime.</p>
+          </div>
+        </div>
+        
+        <div class="api-info">
+          <h4>About Pollinations.ai</h4>
+          <p>
+            This project uses the Pollinations.ai API, which allows us to generate text, images, and audio content.
+            For more information about Pollinations.ai, visit their <a href="https://pollinations.ai" target="_blank">website</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Pricing Page -->
+    <section id="pricing" class="page">
+      <div class="pricing-content">
+        <h3><i class="fas fa-tags"></i> Choose Your Creative Journey</h3>
+        
+        <div class="pricing-plans">
+          <div class="pricing-plan free-plan">
+            <div class="plan-badge">Free</div>
+            <div class="plan-header">
+              <h4>Storyteller</h4>
+              <p class="plan-price">€0<span>/month</span></p>
+            </div>
+            <div class="plan-features">
+              <div class="plan-feature">
+                <i class="fas fa-check"></i>
+                <span>3 books per month</span>
+              </div>
+              <div class="plan-feature">
+                <i class="fas fa-check"></i>
+                <span>Access to 2 narrator voices</span>
+              </div>
+              <div class="plan-feature">
+                <i class="fas fa-check"></i>
+                <span>Basic text generation models</span>
+              </div>
+              <div class="plan-feature">
+                <i class="fas fa-check"></i>
+                <span>PDF download</span>
+              </div>
+              <div class="plan-feature disabled">
+                <i class="fas fa-times"></i>
+                <span>Premium narrator voices</span>
+              </div>
+              <div class="plan-feature disabled">
+                <i class="fas fa-times"></i>
+                <span>Advanced AI models</span>
+              </div>
+            </div>
+            <button class="plan-button">Get Started</button>
+            <p class="plan-note">Perfect for casual storytelling</p>
+          </div>
+          
+          <div class="pricing-plan premium-plan">
+            <div class="plan-badge">Premium</div>
+            <div class="plan-header">
+              <h4>Master Wordsmith</h4>
+              <p class="plan-price">€9.99<span>/month</span></p>
+            </div>
+            <div class="plan-features">
+              <div class="plan-feature">
+                <i class="fas fa-check"></i>
+                <span>Unlimited books</span>
+              </div>
+              <div class="plan-feature">
+                <i class="fas fa-check"></i>
+                <span>All narrator voices</span>
+              </div>
+              <div class="plan-feature">
+                <i class="fas fa-check"></i>
+                <span>All AI models (including premium)</span>
+              </div>
+              <div class="plan-feature">
+                <i class="fas fa-check"></i>
+                <span>Priority generation</span>
+              </div>
+              <div class="plan-feature">
+                <i class="fas fa-check"></i>
+                <span>Enhanced cover art</span>
+              </div>
+              <div class="plan-feature">
+                <i class="fas fa-check"></i>
+                <span>Commercial use license</span>
+              </div>
+            </div>
+            <button class="plan-button premium-button">Upgrade Now</button>
+            <p class="plan-note">For serious storytellers and creators</p>
+          </div>
+        </div>
+        
+        <div class="licensing-info">
+          <h4><i class="fas fa-file-contract"></i> Content Licensing</h4>
+          <p>All content generated with StoryForge AI is covered by our permissive license that allows personal and commercial use with attribution. <a href="LICENSE.md" target="_blank">View full license</a></p>
+        </div>
+        
+        <div class="pricing-faq">
+          <h4><i class="fas fa-question-circle"></i> Frequently Asked Questions</h4>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              <h5>Can I cancel my subscription anytime?</h5>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>Yes, you can cancel your premium subscription at any time. You'll continue to have premium benefits until the end of your billing period.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              <h5>What happens if I reach my monthly book limit?</h5>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>Free users can generate up to 3 books per month. Once you reach this limit, you'll need to wait for the next month or upgrade to the premium plan for unlimited books.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              <h5>Do I own the content created with StoryForge AI?</h5>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>Yes! You own all content you create with StoryForge AI. Our license simply requires attribution for commercial use. See our <a href="LICENSE.md" target="_blank">full license</a> for details.</p>
+            </div>
+          </div>
+          
+          <div class="faq-item">
+            <div class="faq-question">
+              <h5>Which narrator voices are available in the free plan?</h5>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>Free users can access the Nova and Alloy voices. Premium subscribers get access to all six voices, including Echo, Fable, Onyx, and Shimmer.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <footer>
+    <p>Created with <i class="fas fa-heart"></i> and too much coffee by Tauris Gramauskas | Powered by Pollinations.ai API</p>
+  </footer>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html> 
