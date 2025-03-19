@@ -343,7 +343,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Viršelio generavimo funkcija
   async function generateCover(bookTitle) {
     // Ensure we're using the clean title for the cover
-    const coverPrompt = encodeURIComponent(`Create a professional book cover design for "${bookTitle}". Make it look like a bestseller cover with clear title placement and proper word placement avoid duplicate words.`);
+    const coverPrompt = encodeURIComponent(`Create a book cover design for "${bookTitle}". Make it look like a bestseller cover, no duplictate titles on cover and author of book is always StoryForge AI ensure proper text placements`);
     const coverURL = `https://image.pollinations.ai/prompt/${coverPrompt}?width=512&height=768&nologo=true&model=openjourney`;
     
     return new Promise((resolve) => {
