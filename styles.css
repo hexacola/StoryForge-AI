@@ -1221,6 +1221,20 @@ footer i {
   .book-front h2 {
     font-size: 1.2em;
   }
+  
+  .user-account {
+    margin-top: 15px;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .google-signin {
+    margin: 0 auto;
+  }
+  
+  .nav-container {
+    flex-wrap: wrap;
+  }
 }
 
 /* Page Layout */
@@ -1747,4 +1761,162 @@ footer i {
     transform: scale(1);
     opacity: 1;
   }
+}
+
+/* User Account Styles */
+.user-account {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+}
+
+.google-signin {
+  height: 32px !important;
+  min-width: 120px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border-radius: var(--radius) !important;
+  overflow: visible !important;
+  padding: 2px !important;
+  position: relative !important;
+  z-index: 10 !important;
+  margin: 0 !important;
+  transition: var(--transition) !important;
+}
+
+.google-signin:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow-strong) !important;
+}
+
+.google-signin div {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.google-signin iframe {
+  scale: 0.9 !important;
+  transform-origin: center !important;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+
+.user-profile:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-dropdown {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 200px;
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-strong);
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.user-profile:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(5px);
+}
+
+.dropdown-menu a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.dropdown-menu a:hover {
+  background: #f5f5f5;
+}
+
+.dropdown-menu i {
+  color: var(--primary-color);
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
+}
+
+.signin-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 10px;
+}
+
+#signinLabel {
+  font-size: 12px;
+  color: #fff;
+  margin-top: 4px;
+  text-align: center;
+  background: var(--accent-color);
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+  animation: pulse 2s infinite;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.signin-container {
+  display: flex;
+  align-items: center;
+}
+
+#signInDiv {
+  min-width: 120px;
+  height: 32px;
+}
+
+#signInDiv iframe {
+  scale: 0.9;
+  transform-origin: center;
 } 

@@ -343,7 +343,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Viršelio generavimo funkcija
   async function generateCover(bookTitle) {
     // Ensure we're using the clean title for the cover
-    const coverPrompt = encodeURIComponent(`Create a professional book cover design for "${bookTitle}". Use elegant typography, dramatic lighting, and vivid colors. Make it look like a bestseller cover with clear title placement.`);
+    const coverPrompt = encodeURIComponent(`Create a professional book cover design for "${bookTitle}". Make it look like a bestseller cover with clear title placement and proper word placement avoid duplicate words.`);
     const coverURL = `https://image.pollinations.ai/prompt/${coverPrompt}?width=512&height=768&nologo=true&model=openjourney`;
     
     return new Promise((resolve) => {
@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add timestamp and random seed to ensure uniqueness
     const uniquePrompt = `${promptText} (Timestamp: ${Date.now()}, Seed: ${Math.random()})`;
     const titlePrompt = encodeURIComponent(`Create a unique, creative, and captivating book title (different from any previous titles) for a book about: ${uniquePrompt}. 
-      Make it original and memorable. Do not repeat previous titles. Generate only ONE title without numbering or listing options.`);
+      Make it original and memorable. Do not repeat previous titles. Generate only ONE title without numbering or listing options make it short and concise.`);
     const titleURL = `https://text.pollinations.ai/${titlePrompt}?model=${model}&temperature=0.9`;  // Increased temperature for more randomness
     
     try {
@@ -505,20 +505,22 @@ WRITING STYLE: ensure word count is 1000-2000 words per chapter:
 - Vary sentence structure and pacing
 - Include emotional depth and nuance
 
-CHAPTER STRUCTURE: ensure word count is 1000-2000 words per chapter:
+
+**IMPORTANT**: CHAPTER STRUCTURE: ensure word count is 1000-2000 words per chapter:
 - 20 chapters total
 - Each chapter should advance plot and character development
 - End chapters with hooks that pull readers forward
+- Write only the necessary content without extra symbols include titles, subtitles, or specific dialogue formatting for book writing.
 - Use "---CHAPTER BREAK---" between chapters
 - Start each with "Chapter [Number]: [Engaging Title]"
 
-Make this story feel like it was written by a skilled human author, with natural flow, emotional depth, and creative storytelling.`;
+Make this story feel like it was written by a skilled human author, with natural flow, emotional depth, and creative storytelling ensure every chapter is consistent with the story.`;
 
     // Helper function for delay between retries
     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
     // Helper function to make API call with retries
-    async function makeApiCall(chapterPrompt, retries = 3, baseDelay = 2000) {
+    async function makeApiCall(chapterPrompt, retries = 3, baseDelay = 1500) {
       for (let attempt = 0; attempt < retries; attempt++) {
         try {
           const controller = new AbortController();
@@ -944,7 +946,7 @@ Make this chapter feel natural and emotionally engaging, focusing on ${i === tot
           audioElem.className = 'chapter-audio-player';
           
           // Enhanced narration prompt for more natural delivery
-          const narrationPrompt = `Read this passage with natural expression, emotion, and pacing. Vary your tone to match the content's mood. Use appropriate pauses for punctuation and dramatic effect, give every charater a unique voice and accent:
+          const narrationPrompt = `Read this passage with natural expression, emotion, and dynamic pacing. Adjust your tone to reflect the mood and intensity of the content. Utilize appropriate pauses for punctuation, dramatic effect, and natural speech flow. Distinguish each character with a unique voice, accent, and personality, ensuring consistency throughout. Infuse humor where appropriate—chuckle, smirk, or burst into laughter when the moment calls for it. Let wit and charm shine through to make the narration engaging and immersive. Bring the text to life with storytelling that captivates and entertains the listener from start to finish.:
 
 ${cleanedText}`;
 
@@ -1837,7 +1839,7 @@ ${cleanedText}`;
   // Initialize Google Sign-In
   function initializeGoogleSignIn() {
     google.accounts.id.initialize({
-      client_id: '377434162573-1fvt50m49lga2fmfqa7vfa2ijhkgc8b2.apps.googleusercontent.com', // Replace with your actual Google Client ID
+      client_id: '377434162573-1fvt50m49lga2fmfqa7vfa2ijhkgc8b2.apps.googleusercontent.com',
       callback: handleCredentialResponse,
       auto_select: false,
       cancel_on_tap_outside: true
@@ -1847,7 +1849,7 @@ ${cleanedText}`;
       document.getElementById("signInDiv"), 
       { 
         theme: "outline", 
-        size: "large",
+        size: "medium",
         type: "standard",
         shape: "rectangular",
         text: "signin_with",
@@ -1861,7 +1863,6 @@ ${cleanedText}`;
 
   // Handle the sign-in response
   function handleCredentialResponse(response) {
-    // Parse the credentials
     const credentials = parseJwt(response.credential);
     
     // Update user information
@@ -1883,9 +1884,6 @@ ${cleanedText}`;
     // Create avatar image
     const avatarContainer = document.getElementById('userAvatar');
     avatarContainer.innerHTML = `<img src="${googleUser.picture}" alt="${googleUser.name}">`;
-    
-    // Load user's plan data from database or create new if first time
-    loadUserPlanData();
     
     // Display a welcome message
     showAlert(`Welcome back, ${googleUser.name.split(' ')[0]}!`);
